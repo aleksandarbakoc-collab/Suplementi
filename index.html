@@ -35,7 +35,6 @@ body {
   padding-bottom: 120px;
 }
 
-/* noise texture overlay */
 body::before {
   content: '';
   position: fixed;
@@ -45,7 +44,38 @@ body::before {
   z-index: 0;
 }
 
-/* HEADER */
+/* SYNC INDICATOR */
+.sync-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 999;
+  transition: all 0.3s;
+}
+.sync-bar.syncing { background: linear-gradient(90deg, var(--accent2), var(--accent3)); animation: syncPulse 1s infinite; }
+.sync-bar.error { background: var(--accent); }
+@keyframes syncPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.sync-status {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  font-size: 9px;
+  font-family: 'Space Mono', monospace;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  z-index: 200;
+  transition: all 0.3s;
+  opacity: 0;
+}
+.sync-status.visible { opacity: 1; }
+
 .header {
   background: var(--ink);
   color: var(--bg);
@@ -110,7 +140,6 @@ body::before {
   width: 0%;
 }
 
-/* TABS */
 .tabs {
   display: flex;
   background: var(--ink);
@@ -137,14 +166,12 @@ body::before {
   border-bottom-color: var(--accent);
 }
 
-/* MAIN */
 .main {
   padding: 16px 20px;
   position: relative;
   z-index: 1;
 }
 
-/* DATE NAV */
 .date-nav {
   display: flex;
   align-items: center;
@@ -195,7 +222,6 @@ body::before {
 
 .today-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* STATS */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -227,7 +253,6 @@ body::before {
   text-transform: uppercase;
 }
 
-/* SECTION */
 .section-hdr {
   font-family: 'Unbounded', sans-serif;
   font-size: 9px;
@@ -248,7 +273,6 @@ body::before {
   background: var(--border);
 }
 
-/* SUP ITEMS */
 .sup-list { display: flex; flex-direction: column; gap: 5px; }
 
 .sup-item {
@@ -356,7 +380,6 @@ body::before {
 .is-done .sup-time { color: var(--accent3); font-weight: 700; }
 .is-rx.is-done .sup-time { color: var(--gold); }
 
-/* ALL DONE BANNER */
 .all-done {
   margin-top: 16px;
   background: var(--done-bg);
@@ -376,7 +399,6 @@ body::before {
   margin-top: 6px;
 }
 
-/* RESET */
 .reset-btn {
   display: block;
   width: 100%;
@@ -394,7 +416,6 @@ body::before {
 
 .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* HISTORY TAB */
 .hist-card {
   background: var(--card);
   border: 1.5px solid var(--border);
@@ -450,7 +471,6 @@ body::before {
 .empty-icon { font-size: 32px; margin-bottom: 8px; }
 .empty-text { font-size: 12px; }
 
-/* WARNINGS TAB */
 .warn-card {
   border-radius: 8px;
   border: 1.5px solid;
@@ -515,16 +535,55 @@ body::before {
   letter-spacing: 0.3px;
 }
 
-/* PANELS */
 .panel { display: none; }
 .panel.active { display: block; }
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  gap: 12px;
+}
+.loading-overlay.hidden { display: none; }
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
 </style>
 </head>
 <body>
 
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">UČITAVANJE...</div>
+</div>
+
+<!-- Sync indicators -->
+<div class="sync-bar" id="syncBar"></div>
+<div class="sync-status" id="syncStatus"></div>
+
 <div class="header">
   <div class="header-row">
-    <div class="app-name">SAŠIN TRACKER<span>.</span></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#5a5650;margin-top:3px;letter-spacing:1px;">v1.1 — SUPLEMENTI</div>
+    <div class="app-name">SAŠIN TRACKER<span>.</span></div>
+    <div style="font-family:'Space Mono',monospace;font-size:9px;color:#5a5650;margin-top:3px;letter-spacing:1px;">v1.2 — FIREBASE</div>
     <div class="date-tag" id="headerDate">—</div>
   </div>
   <div class="progress-area">
@@ -548,7 +607,6 @@ body::before {
 
   <!-- TODAY -->
   <div class="panel active" id="panel-today">
-
     <div class="date-nav">
       <button class="dnav-btn" onclick="shiftDay(-1)">&#8592;</button>
       <div class="dnav-label" id="navLabel">—</div>
@@ -581,7 +639,6 @@ body::before {
 
   <!-- WARNINGS -->
   <div class="panel" id="panel-warnings">
-
     <div class="warn-card red">
       <div class="warn-title">🚫 Ne kombinovati / Izbegavati</div>
       <div class="warn-row">
@@ -709,18 +766,31 @@ body::before {
     <div class="warn-footer">
       ⚕️ Informativno. Konsultujte lekara pre promene terapije ili suplemenata.
     </div>
-
   </div>
 </div>
 
-<script>
-// ─── SCHEDULE ────────────────────────────────────────────────────────────────
-// cat: 'morning' | 'meal' | 'evening'
-// isNew: true = plava oznaka NOVO
-// isRx: true = zlatna oznaka Rx
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 
+// ─── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC2A62LsbPAGg23_WMU7-ExkiF23wyKpRk",
+  authDomain: "sasin-tracker.firebaseapp.com",
+  projectId: "sasin-tracker",
+  storageBucket: "sasin-tracker.firebasestorage.app",
+  messagingSenderId: "529987820897",
+  appId: "1:529987820897:web:71a99e4201ffd892c77920",
+  measurementId: "G-X4Z6523FDF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ─── SCHEDULE ────────────────────────────────────────────────────────────────
 const S = {
-  0: [ // Nedelja
+  0: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
     {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
@@ -731,7 +801,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  1: [ // Ponedeljak
+  1: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
     {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
@@ -744,7 +814,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  2: [ // Utorak
+  2: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
     {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
@@ -755,7 +825,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  3: [ // Sreda
+  3: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
     {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
@@ -769,7 +839,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  4: [ // Četvrtak
+  4: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
     {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
@@ -779,7 +849,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  5: [ // Petak
+  5: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
     {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
@@ -792,7 +862,7 @@ const S = {
     {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
-  6: [ // Subota
+  6: [
     {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
     {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
@@ -813,39 +883,82 @@ function dkey(d) {
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-function load() { try { return JSON.parse(localStorage.getItem('sup_v2')||'{}'); } catch(e) { return {}; } }
-function save(data) { localStorage.setItem('sup_v2', JSON.stringify(data)); }
+// ─── IN-MEMORY CACHE (so UI stays fast) ──────────────────────────────────────
+let cache = {};
 
-let vd = new Date(); vd.setHours(0,0,0,0);
+// ─── SYNC UI ─────────────────────────────────────────────────────────────────
+let syncTimer = null;
+function showSync(msg, type='syncing') {
+  const bar = document.getElementById('syncBar');
+  const status = document.getElementById('syncStatus');
+  bar.className = 'sync-bar ' + type;
+  status.textContent = msg;
+  status.className = 'sync-status visible';
+  clearTimeout(syncTimer);
+  if(type !== 'syncing') {
+    syncTimer = setTimeout(() => {
+      bar.className = 'sync-bar';
+      status.className = 'sync-status';
+    }, 2000);
+  }
+}
+
+// ─── FIRESTORE LOAD/SAVE ─────────────────────────────────────────────────────
+async function loadFromFirestore() {
+  try {
+    showSync('Učitavanje...', 'syncing');
+    const colRef = collection(db, 'tracker');
+    const snap = await getDocs(colRef);
+    cache = {};
+    snap.forEach(d => { cache[d.id] = d.data().checked || []; });
+    showSync('✓ Učitano', 'done');
+  } catch(e) {
+    console.error(e);
+    showSync('⚠ Offline mod', 'error');
+  }
+}
+
+async function saveToFirestore(key, checked) {
+  try {
+    showSync('Čuvanje...', 'syncing');
+    await setDoc(doc(db, 'tracker', key), { checked });
+    showSync('✓ Sačuvano', 'done');
+  } catch(e) {
+    console.error(e);
+    showSync('⚠ Greška pri čuvanju', 'error');
+  }
+}
+
+// ─── DATA HELPERS ─────────────────────────────────────────────────────────────
+function getChecked(key) { return cache[key] || []; }
 
 function isToday(d) { const t=new Date(); t.setHours(0,0,0,0); return d.getTime()===t.getTime(); }
 function isFuture(d) { const t=new Date(); t.setHours(0,0,0,0); return d>t; }
-
 function fmtDate(d) {
   return DAYS_FULL[d.getDay()] + ', ' + d.getDate() + '. ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + '.';
 }
 
 function streak() {
-  const data = load();
   let s = 0, d = new Date(); d.setHours(0,0,0,0);
   while(true) {
     const k = dkey(d);
     const sups = S[d.getDay()]||[];
-    const chk = data[k]||[];
+    const chk = getChecked(k);
     if(sups.length > 0 && chk.length >= sups.length) { s++; d = new Date(d-86400000); }
     else break;
   }
   return s;
 }
 
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+let vd = new Date(); vd.setHours(0,0,0,0);
+
 function renderDay() {
   const key = dkey(vd);
   const dayIdx = vd.getDay();
   const sups = S[dayIdx]||[];
-  const data = load();
-  const checked = data[key]||[];
+  const checked = getChecked(key);
 
-  // header
   document.getElementById('headerDate').textContent = fmtDate(new Date());
   document.getElementById('navLabel').textContent = isToday(vd) ? '— DANAS —' : fmtDate(vd);
 
@@ -912,28 +1025,29 @@ function renderDay() {
   });
 }
 
-function toggle(key, id) {
-  const data = load();
-  if(!data[key]) data[key]=[];
-  const i = data[key].indexOf(id);
-  if(i>=0) data[key].splice(i,1); else data[key].push(id);
-  save(data);
-  renderDay();
+async function toggle(key, id) {
+  if(!cache[key]) cache[key] = [];
+  const i = cache[key].indexOf(id);
+  if(i>=0) cache[key].splice(i,1); else cache[key].push(id);
+  renderDay(); // instant UI update from cache
+  await saveToFirestore(key, cache[key]); // then persist
 }
 
-function resetDay() {
+window.resetDay = async function() {
   if(!confirm('Resetovati sve za ovaj dan?')) return;
-  const data = load(); delete data[dkey(vd)]; save(data); renderDay();
-}
+  const key = dkey(vd);
+  cache[key] = [];
+  renderDay();
+  await saveToFirestore(key, []);
+};
 
-function shiftDay(n) { vd = new Date(vd.getTime()+n*86400000); renderDay(); }
-function goToday() { vd = new Date(); vd.setHours(0,0,0,0); renderDay(); }
+window.shiftDay = function(n) { vd = new Date(vd.getTime()+n*86400000); renderDay(); };
+window.goToday = function() { vd = new Date(); vd.setHours(0,0,0,0); renderDay(); };
 
 function renderHistory() {
-  const data = load();
-  const keys = Object.keys(data).sort().reverse();
   const wrap = document.getElementById('histWrap');
   wrap.innerHTML = '';
+  const keys = Object.keys(cache).sort().reverse();
 
   if(!keys.length) {
     wrap.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.<br>Počnite da čekirate!</div></div>';
@@ -942,7 +1056,7 @@ function renderHistory() {
 
   let any = false;
   keys.forEach(key => {
-    const chk = data[key]||[];
+    const chk = cache[key]||[];
     if(!chk.length) return;
     const d = new Date(key+'T00:00:00');
     const sups = S[d.getDay()]||[];
@@ -967,16 +1081,22 @@ function renderHistory() {
   if(!any) wrap.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.</div></div>';
 }
 
-function switchTab(tab, btn) {
+window.switchTab = function(tab, btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
   btn.classList.add('active');
   if(tab==='history') renderHistory();
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  await loadFromFirestore();
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  renderDay();
 }
 
-// INIT
-renderDay();
+init();
 </script>
 </body>
 </html>
