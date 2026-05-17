@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Sašin tracker za suplemente v1.0</title>
+<title>Sašin tracker za suplemente v1.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Unbounded:wght@300;400;600;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -524,7 +524,7 @@ body::before {
 
 <div class="header">
   <div class="header-row">
-    <div class="app-name">SAŠIN TRACKER<span>.</span></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#5a5650;margin-top:3px;letter-spacing:1px;">v1.0 — SUPLEMENTI</div>
+    <div class="app-name">SAŠIN TRACKER<span>.</span></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#5a5650;margin-top:3px;letter-spacing:1px;">v1.1 — SUPLEMENTI</div>
     <div class="date-tag" id="headerDate">—</div>
   </div>
   <div class="progress-area">
@@ -613,8 +613,8 @@ body::before {
         <span class="warn-val">Liposolubilan vitamin — uvek uz obrok koji sadrži zdrave masti.</span>
       </div>
       <div class="warn-row">
-        <span class="warn-key">Omega-3 → uz obrok</span>
-        <span class="warn-val">Bolja apsorpcija uz obrok. Smanjuje i riblje podrigivanje.</span>
+        <span class="warn-key">Omega-3 → 2 kapsule/dan obavezno</span>
+        <span class="warn-val">Solgar Double Strength = 600mg EPA+DHA po kapsuli. Uzimati 2 kapsule dnevno uz obrok da se dostigne terapijska doza od ~1200mg. Jedna kapsula nije dovoljna.</span>
       </div>
     </div>
 
@@ -645,8 +645,8 @@ body::before {
     <div class="warn-card green">
       <div class="warn-title">💊 Crestor — specifična upozorenja</div>
       <div class="warn-row">
-        <span class="warn-key">CoQ10 — svaki dan, uz obrok</span>
-        <span class="warn-val">Rosuvastatini blokiraju prirodnu produkciju CoQ10. Deficit uzrokuje zamor i bolove u mišićima. Uzimati uz masni obrok — ne uveče jer može ometati san.</span>
+        <span class="warn-key">CoQ10 — svaki dan, uz obrok ⚠️</span>
+        <span class="warn-val">Rosuvastatini blokiraju CoQ10. Trenutni Anafarm CoQ10 je Ubiquinone forma — preporučuje se zamena sa Ubiquinol formom (Solgar/Kaneka) koja je direktno aktivna i 3x bolje se apsorbuje, posebno važno uz Crestor i sa godinama.</span>
       </div>
       <div class="warn-row">
         <span class="warn-key">Grejpfrut — OK</span>
@@ -721,86 +721,87 @@ body::before {
 
 const S = {
   0: [ // Nedelja
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
-    {id:'selen', name:'Selen', dose:'100–200mcg', cat:'meal', isNew:true, isRx:false},
-    {id:'zink', name:'Zink', dose:'15–25mg', cat:'meal', isNew:true, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
+    {id:'selen', name:'Selen 200mcg (Terra Nova)', dose:'200mcg — uz obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:true, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   1: [ // Ponedeljak
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:true, isRx:false},
-    {id:'vite', name:'Vitamin E (Mixed Tocopherols)', dose:'200–400 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
+    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
+    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
     {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   2: [ // Utorak
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
-    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:true, isRx:false},
-    {id:'vitc', name:'Vitamin C', dose:'1000mg', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
+    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
+    {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   3: [ // Sreda
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:true, isRx:false},
-    {id:'vite', name:'Vitamin E (Mixed Tocopherols)', dose:'200–400 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
-    {id:'zink', name:'Zink', dose:'15–25mg', cat:'meal', isNew:true, isRx:false},
+    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
+    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
+    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
     {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   4: [ // Četvrtak
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
-    {id:'selen', name:'Selen', dose:'100–200mcg', cat:'meal', isNew:true, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
+    {id:'selen', name:'Selen 200mcg (Terra Nova)', dose:'200mcg — uz obrok', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   5: [ // Petak
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
     {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:true, isRx:false},
-    {id:'vite', name:'Vitamin E (Mixed Tocopherols)', dose:'200–400 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
+    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
+    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
     {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
   6: [ // Subota
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', cat:'morning', isNew:false, isRx:false},
-    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:true, isRx:false},
-    {id:'vitc', name:'Vitamin C', dose:'1000mg', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 (Solgar DS)', dose:'2 kapsule = 1200mg EPA+DHA', cat:'meal', isNew:true, isRx:false},
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
+    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
+    {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
+    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
+    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:false, isRx:false},
     {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:true, isRx:false},
-    {id:'mg', name:'Magnezijum (Glycinate)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
+    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
     {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
   ],
 };
