@@ -3,38 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Sašin tracker za suplemente v1.1</title>
+<title>Sašin tracker za suplemente v4.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Unbounded:wght@300;400;600;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f2eb;
-  --ink: #1a1814;
-  --card: #ffffff;
-  --border: #d4cfc4;
-  --accent: #c8432a;
-  --accent2: #2a6cc8;
-  --accent3: #2a8a4a;
-  --gold: #c8962a;
-  --muted: #8a8478;
-  --light: #ede9e0;
-  --rx-bg: #fff8e8;
-  --rx-border: #c8962a;
-  --new-bg: #e8f0ff;
-  --new-border: #2a6cc8;
-  --done-bg: #e8f5ec;
-  --done-border: #2a8a4a;
+  --bg: #f5f2eb; --ink: #1a1814; --card: #ffffff; --border: #d4cfc4;
+  --accent: #c8432a; --accent2: #2a6cc8; --accent3: #2a8a4a; --gold: #c8962a;
+  --muted: #8a8478; --light: #ede9e0;
+  --rx-bg: #fff8e8; --rx-border: #c8962a;
+  --new-bg: #e8f0ff; --new-border: #2a6cc8;
+  --done-bg: #e8f5ec; --done-border: #2a8a4a;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Space Mono', monospace;
-  min-height: 100vh;
-  padding-bottom: 120px;
-}
-
+body { background: var(--bg); color: var(--ink); font-family: 'Space Mono', monospace; min-height: 100vh; padding-bottom: 40px; }
+ 
 body::before {
   content: '';
   position: fixed;
@@ -43,547 +25,176 @@ body::before {
   pointer-events: none;
   z-index: 0;
 }
-
+ 
 /* SYNC INDICATOR */
-.sync-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: transparent;
-  z-index: 999;
-  transition: all 0.3s;
-}
+.sync-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: transparent; z-index: 999; transition: all 0.3s; }
 .sync-bar.syncing { background: linear-gradient(90deg, var(--accent2), var(--accent3)); animation: syncPulse 1s infinite; }
 .sync-bar.error { background: var(--accent); }
 @keyframes syncPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-.sync-status {
-  position: fixed;
-  bottom: 20px;
-  right: 16px;
-  font-size: 9px;
-  font-family: 'Space Mono', monospace;
-  color: var(--muted);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  z-index: 200;
-  transition: all 0.3s;
-  opacity: 0;
-}
+.sync-status { position: fixed; bottom: 20px; right: 16px; font-size: 9px; font-family: 'Space Mono', monospace; color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; z-index: 200; transition: all 0.3s; opacity: 0; }
 .sync-status.visible { opacity: 1; }
-
-.header {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 20px 20px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.app-name {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: -1px;
-  line-height: 1;
-}
-
+ 
+.header { background: var(--ink); color: var(--bg); padding: 20px 20px 16px; position: sticky; top: 0; z-index: 100; }
+.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.app-name { font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: -1px; line-height: 1; }
 .app-name span { color: var(--accent); }
-
-.date-tag {
-  font-size: 10px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 4px;
-  padding: 4px 10px;
-  color: #c8c4bc;
-  white-space: nowrap;
-  font-family: 'Space Mono', monospace;
-}
-
+.app-ver { font-size: 8px; color: #5a5650; margin-top: 3px; letter-spacing: 1px; }
+.date-tag { font-size: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 10px; color: #c8c4bc; white-space: nowrap; font-family: 'Space Mono', monospace; }
 .progress-area { margin-top: 14px; }
-
-.prog-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: #7a7670;
-  margin-bottom: 5px;
-}
-
+.prog-labels { display: flex; justify-content: space-between; font-size: 10px; color: #7a7670; margin-bottom: 5px; }
 .prog-labels span:last-child { color: var(--accent); font-weight: 700; }
-
-.prog-track {
-  height: 3px;
-  background: #333;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.prog-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
-  border-radius: 2px;
-  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-  width: 0%;
-}
-
-.tabs {
-  display: flex;
-  background: var(--ink);
-  border-top: 1px solid #333;
-  padding: 0 20px;
-  gap: 0;
-}
-
-.tab {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  padding: 10px 16px 12px;
-  color: #5a5650;
-  cursor: pointer;
-  border: none;
-  background: none;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  letter-spacing: 0.5px;
-}
-
-.tab.active {
-  color: var(--bg);
-  border-bottom-color: var(--accent);
-}
-
-.main {
-  padding: 16px 20px;
-  position: relative;
-  z-index: 1;
-}
-
-.date-nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.dnav-btn {
-  width: 34px;
-  height: 34px;
-  border: 1.5px solid var(--border);
-  background: var(--card);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink);
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-
+.prog-track { height: 3px; background: #333; border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+ 
+.tabs { display: flex; background: var(--ink); border-top: 1px solid #333; padding: 0 20px; overflow-x: auto; scrollbar-width: none; gap: 0; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { font-family: 'Space Mono', monospace; font-size: 10px; padding: 10px 12px 12px; color: #5a5650; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; letter-spacing: 0.3px; }
+.tab.active { color: var(--bg); border-bottom-color: var(--accent); }
+ 
+.main { padding: 16px 20px; position: relative; z-index: 1; }
+ 
+.date-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.dnav-btn { width: 34px; height: 34px; border: 1.5px solid var(--border); background: var(--card); border-radius: 6px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: all 0.15s; flex-shrink: 0; }
 .dnav-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.dnav-label {
-  flex: 1;
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: 0.5px;
-}
-
-.today-btn {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  padding: 6px 12px;
-  border: 1.5px solid var(--border);
-  background: var(--card);
-  border-radius: 6px;
-  cursor: pointer;
-  color: var(--muted);
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-
+.dnav-label { flex: 1; text-align: center; font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink); letter-spacing: 0.5px; }
+.today-btn { font-family: 'Space Mono', monospace; font-size: 10px; padding: 6px 12px; border: 1.5px solid var(--border); background: var(--card); border-radius: 6px; cursor: pointer; color: var(--muted); transition: all 0.15s; flex-shrink: 0; }
 .today-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.stat {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 8px;
-  text-align: center;
-}
-
-.stat-val {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.stat-lbl {
-  font-size: 8px;
-  color: var(--muted);
-  margin-top: 3px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.section-hdr {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 18px 0 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-hdr::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
+ 
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+.stat { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 8px; text-align: center; }
+.stat-val { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; color: var(--accent); line-height: 1; }
+.stat-lbl { font-size: 8px; color: var(--muted); margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; }
+ 
+.sec-hdr { font-family: 'Unbounded', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; display: flex; align-items: center; gap: 8px; }
+.sec-hdr::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+ 
 .sup-list { display: flex; flex-direction: column; gap: 5px; }
-
-.sup-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 11px 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
+.sup-item { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 12px; cursor: pointer; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
 .sup-item:hover { border-color: #bbb; }
 .sup-item:active { transform: scale(0.99); }
-
-.sup-item.is-done {
-  background: var(--done-bg);
-  border-color: var(--done-border);
-}
-
-.sup-item.is-rx.is-done {
-  background: var(--rx-bg);
-  border-color: var(--rx-border);
-}
-
-.chk {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 13px;
-  transition: all 0.15s;
-  background: transparent;
-}
-
-.is-done .chk {
-  background: var(--accent3);
-  border-color: var(--accent3);
-  color: #fff;
-}
-
-.is-rx.is-done .chk {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #fff;
-}
-
+.sup-item.is-done { background: var(--done-bg); border-color: var(--done-border); }
+.sup-item.is-rx.is-done { background: var(--rx-bg); border-color: var(--rx-border); }
+.sup-item.is-paused { opacity: 0.5; cursor: not-allowed; background: var(--light); }
+.sup-item.is-future-start { opacity: 0.7; border-style: dashed; }
+ 
+.chk { width: 22px; height: 22px; border-radius: 5px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; transition: all 0.15s; background: transparent; }
+.is-done .chk { background: var(--accent3); border-color: var(--accent3); color: #fff; }
+.is-rx.is-done .chk { background: var(--gold); border-color: var(--gold); color: #fff; }
+ 
 .sup-body { flex: 1; min-width: 0; }
-
-.sup-name-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-.sup-name {
-  font-family: 'Space Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.2;
-}
-
-.is-done .sup-name {
-  color: var(--muted);
-  text-decoration: line-through;
-}
-
-.badge {
-  font-size: 8px;
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 3px;
-  letter-spacing: 0.5px;
-  font-family: 'Unbounded', sans-serif;
-}
-
-.badge-new { background: var(--new-bg); color: var(--accent2); border: 1px solid var(--new-border); }
+.sup-name-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.sup-name { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.is-done .sup-name { color: var(--muted); text-decoration: line-through; }
+.badge { font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 3px; letter-spacing: 0.5px; font-family: 'Unbounded', sans-serif; flex-shrink: 0; }
 .badge-rx { background: var(--rx-bg); color: var(--gold); border: 1px solid var(--rx-border); }
-
-.sup-dose {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.sup-time {
-  font-size: 9px;
-  color: var(--muted);
-  text-align: right;
-  flex-shrink: 0;
-  max-width: 80px;
-  line-height: 1.3;
-}
-
+.badge-pause { background: #ffe0e0; color: #c00; border: 1px solid #f88; }
+.badge-soon { background: #f5f0ff; color: #6a3ac8; border: 1px solid #b08ee8; }
+.sup-dose { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+.sup-brand { font-size: 9px; color: var(--accent2); margin-top: 1px; font-style: italic; }
+.sup-method { font-size: 9px; color: var(--accent3); margin-top: 1px; font-weight: 700; }
+.sup-time { font-size: 9px; color: var(--muted); text-align: right; flex-shrink: 0; max-width: 80px; line-height: 1.3; }
 .is-done .sup-time { color: var(--accent3); font-weight: 700; }
 .is-rx.is-done .sup-time { color: var(--gold); }
-
-.all-done {
-  margin-top: 16px;
-  background: var(--done-bg);
-  border: 2px solid var(--done-border);
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-  display: none;
-}
-
+ 
+.all-done { margin-top: 16px; background: var(--done-bg); border: 2px solid var(--done-border); border-radius: 10px; padding: 16px; text-align: center; display: none; }
 .all-done-icon { font-size: 28px; }
-.all-done-text {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent3);
-  margin-top: 6px;
-}
-
-.reset-btn {
-  display: block;
-  width: 100%;
-  margin-top: 16px;
-  padding: 10px;
-  background: transparent;
-  border: 1.5px dashed var(--border);
-  border-radius: 8px;
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
+.all-done-text { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600; color: var(--accent3); margin-top: 6px; }
+.reset-btn { display: block; width: 100%; margin-top: 16px; padding: 10px; background: transparent; border: 1.5px dashed var(--border); border-radius: 8px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
 .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.hist-card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 10px;
-}
-
-.hist-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.hist-date {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.hist-score {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--accent3);
-}
-
-.hist-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.hist-pill {
-  font-size: 9px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--done-bg);
-  color: var(--accent3);
-  border: 1px solid var(--done-border);
-  font-family: 'Space Mono', monospace;
-}
-
+ 
+.hist-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.hist-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.hist-date { font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink); }
+.hist-score { font-size: 11px; font-weight: 700; color: var(--accent3); }
+.hist-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+.hist-pill { font-size: 9px; padding: 3px 8px; border-radius: 4px; background: var(--done-bg); color: var(--accent3); border: 1px solid var(--done-border); font-family: 'Space Mono', monospace; }
 .hist-pill.rx { background: var(--rx-bg); color: var(--gold); border-color: var(--rx-border); }
-
-.empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--muted);
-}
-
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .empty-icon { font-size: 32px; margin-bottom: 8px; }
-.empty-text { font-size: 12px; }
-
-.warn-card {
-  border-radius: 8px;
-  border: 1.5px solid;
-  padding: 14px;
-  margin-bottom: 10px;
-}
-
+.empty-text { font-size: 12px; line-height: 1.6; }
+ 
+/* LAB */
+.lab-section { margin-bottom: 14px; }
+.lab-title { font-family: 'Unbounded', sans-serif; font-size: 9px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.lab-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 0.5px solid var(--light); font-size: 10px; gap: 8px; }
+.lab-row:last-child { border-bottom: none; }
+.lab-name { color: var(--ink); font-weight: 700; flex: 1; }
+.lab-val { font-weight: 700; font-family: 'Unbounded', sans-serif; font-size: 11px; min-width: 50px; text-align: right; }
+.lab-val.ok { color: var(--accent3); }
+.lab-val.warn { color: var(--gold); }
+.lab-val.high { color: var(--accent); }
+.lab-ref { font-size: 8px; color: var(--muted); text-align: right; min-width: 70px; }
+.lab-date { font-size: 8px; color: var(--accent2); }
+.gen-card { background: #f5f0ff; border: 1.5px solid #c0a8e8; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.gen-title { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: #6a3ac8; margin-bottom: 8px; }
+.gen-content { font-size: 9px; color: var(--ink); line-height: 1.6; }
+.gen-content b { color: #6a3ac8; }
+ 
+/* WARN */
+.warn-card { border-radius: 8px; border: 1.5px solid; padding: 14px; margin-bottom: 10px; }
 .warn-card.red { background: #fff5f5; border-color: #e8b0a8; }
+.warn-card.orange { background: #fff8f0; border-color: #e8c8a0; }
 .warn-card.yellow { background: var(--rx-bg); border-color: #e8c878; }
 .warn-card.blue { background: var(--new-bg); border-color: #a8c0e8; }
 .warn-card.green { background: var(--done-bg); border-color: #a8d0b8; }
+.warn-card.purple { background: #f5f0ff; border-color: #c0a8e8; }
 .warn-card.gray { background: var(--light); border-color: var(--border); }
-
-.warn-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-}
-
+.warn-title { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.08); }
 .red .warn-title { color: var(--accent); }
+.orange .warn-title { color: #c85a00; }
 .yellow .warn-title { color: var(--gold); }
 .blue .warn-title { color: var(--accent2); }
 .green .warn-title { color: var(--accent3); }
+.purple .warn-title { color: #6a3ac8; }
 .gray .warn-title { color: var(--muted); }
-
-.warn-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
-  align-items: flex-start;
-}
-
+.warn-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
 .warn-row:last-child { margin-bottom: 0; }
-
-.warn-key {
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 140px;
-  flex-shrink: 0;
-  color: var(--ink);
-  line-height: 1.4;
-  padding-top: 1px;
-}
-
-.warn-val {
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.warn-footer {
-  margin-top: 12px;
-  padding: 10px 12px;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  font-size: 9px;
-  color: var(--muted);
-  text-align: center;
-  letter-spacing: 0.3px;
-}
-
+.warn-key { font-size: 10px; font-weight: 700; min-width: 140px; flex-shrink: 0; color: var(--ink); line-height: 1.4; padding-top: 1px; }
+.warn-val { font-size: 10px; color: var(--muted); line-height: 1.5; }
+.warn-footer { margin-top: 12px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 6px; font-size: 9px; color: var(--muted); text-align: center; }
+ 
+/* SUGGESTED */
+.sug-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+.sug-card.must { border-color: var(--accent); background: #fff8f5; }
+.sug-card.recommend { border-color: var(--gold); background: var(--rx-bg); }
+.sug-card.optional { border-color: var(--accent2); background: var(--new-bg); }
+.sug-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.sug-name { font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 700; color: var(--ink); }
+.sug-tag { font-size: 8px; font-weight: 700; padding: 3px 7px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap; font-family: 'Unbounded', sans-serif; }
+.sug-tag.must { background: var(--accent); color: #fff; }
+.sug-tag.recommend { background: var(--gold); color: #fff; }
+.sug-tag.optional { background: var(--accent2); color: #fff; }
+.sug-why { font-size: 9px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+.sug-details { display: flex; flex-direction: column; gap: 3px; font-size: 9px; color: var(--ink); padding-top: 6px; border-top: 1px solid rgba(0,0,0,0.07); }
+.sug-details strong { color: var(--accent2); }
+ 
 .panel { display: none; }
 .panel.active { display: block; }
-
+ 
 /* Loading overlay */
-.loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
-  gap: 12px;
-}
+.loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 500; gap: 12px; }
 .loading-overlay.hidden { display: none; }
-.loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-text {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 1px;
-}
+.loading-text { font-family: 'Unbounded', sans-serif; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
 </style>
 </head>
 <body>
-
-<!-- Loading overlay -->
+ 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">UČITAVANJE...</div>
 </div>
-
-<!-- Sync indicators -->
+ 
 <div class="sync-bar" id="syncBar"></div>
 <div class="sync-status" id="syncStatus"></div>
-
+ 
 <div class="header">
   <div class="header-row">
-    <div class="app-name">SAŠIN TRACKER<span>.</span></div>
-    <div style="font-family:'Space Mono',monospace;font-size:9px;color:#5a5650;margin-top:3px;letter-spacing:1px;">v1.2 — FIREBASE</div>
+    <div>
+      <div class="app-name">SAŠIN TRACKER<span>.</span></div>
+      <div class="app-ver">v4.0 — FIREBASE SYNC</div>
+    </div>
     <div class="date-tag" id="headerDate">—</div>
   </div>
   <div class="progress-area">
@@ -596,15 +207,17 @@ body::before {
     </div>
   </div>
 </div>
-
+ 
 <div class="tabs">
   <button class="tab active" onclick="switchTab('today', this)">DANAS</button>
   <button class="tab" onclick="switchTab('history', this)">ISTORIJA</button>
+  <button class="tab" onclick="switchTab('lab', this)">NALAZI</button>
   <button class="tab" onclick="switchTab('warnings', this)">UPOZORENJA</button>
+  <button class="tab" onclick="switchTab('suggested', this)">PREDLOZI</button>
 </div>
-
+ 
 <div class="main">
-
+ 
   <!-- TODAY -->
   <div class="panel active" id="panel-today">
     <div class="date-nav">
@@ -613,168 +226,239 @@ body::before {
       <button class="dnav-btn" onclick="shiftDay(1)">&#8594;</button>
       <button class="today-btn" onclick="goToday()">DANAS</button>
     </div>
-
     <div class="stats">
       <div class="stat"><div class="stat-val" id="sDone">0</div><div class="stat-lbl">Uzeto</div></div>
       <div class="stat"><div class="stat-val" id="sLeft">0</div><div class="stat-lbl">Ostalo</div></div>
       <div class="stat"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">Ukupno</div></div>
       <div class="stat"><div class="stat-val" id="sStreak">0</div><div class="stat-lbl">Streak</div></div>
     </div>
-
     <div id="listWrap"></div>
-
     <div class="all-done" id="allDone">
       <div class="all-done-icon">✅</div>
       <div class="all-done-text">Sve uzeto za danas!</div>
     </div>
-
     <button class="reset-btn" onclick="resetDay()">↺ Resetuj ovaj dan</button>
   </div>
-
+ 
   <!-- HISTORY -->
   <div class="panel" id="panel-history">
-    <div class="section-hdr">Istorija uzimanja</div>
+    <div class="sec-hdr">Istorija uzimanja</div>
     <div id="histWrap"></div>
   </div>
-
-  <!-- WARNINGS -->
-  <div class="panel" id="panel-warnings">
-    <div class="warn-card red">
-      <div class="warn-title">🚫 Ne kombinovati / Izbegavati</div>
-      <div class="warn-row">
-        <span class="warn-key">TruNiagen + Vit. C</span>
-        <span class="warn-val">Ne uzimati istovremeno. Razmak 4–6h eliminiše interakciju. Vaš raspored (TruNiagen ujutro, C uz obrok) je već optimalan.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Crestor + Crveni kvas pirinča</span>
-        <span class="warn-val">Prirodni statin — kombinacija može uzrokovati ozbiljne neželjene efekte na mišiće i jetru. Nikada zajedno.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Mg + Crestor istovremeno</span>
-        <span class="warn-val">Magnezijum uzimati najmanje 1–2h pre Crestora, ne u isto vreme.</span>
+ 
+  <!-- LAB -->
+  <div class="panel" id="panel-lab">
+    <div class="gen-card">
+      <div class="gen-title">🧬 Genetski profil — relevantno</div>
+      <div class="gen-content">
+        <b>MTHFR AG (C677T heterozigot)</b> — slabija konverzija folata, povišen rizik od homocisteina. Zato Metafolin (L-5-MTHF), ne obični folat.<br><br>
+        <b>Vitamin D — genetski rizik (GC, CYP2R1, VDR)</b> — sklonost niskim nivoima. Potrebno 3000–4000 IU dnevno.<br><br>
+        <b>Trigliceridi — genetski rizik</b> — Omega-3 i sport drže pod kontrolom.<br><br>
+        <b>Methotrexate (Pharma)</b> — ako se ikada propiše: povećan rizik od toksičnosti zbog MTHFR.
       </div>
     </div>
-
-    <div class="warn-card yellow">
-      <div class="warn-title">⚡ Obavezne kombinacije</div>
-      <div class="warn-row">
-        <span class="warn-key">D3 → uvek sa K2</span>
-        <span class="warn-val">Bez K2, D3 može deponovati kalcijum u arterijama umesto u kostima. Kritično!</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">CoQ10 → masni obrok</span>
-        <span class="warn-val">Liposolubilan — bez masti apsorpcija je drastično slabija.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Vitamin E → masni obrok</span>
-        <span class="warn-val">Liposolubilan vitamin — uvek uz obrok koji sadrži zdrave masti.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Omega-3 → 2 kapsule/dan obavezno</span>
-        <span class="warn-val">Solgar Double Strength = 600mg EPA+DHA po kapsuli. Uzimati 2 kapsule dnevno uz obrok da se dostigne terapijska doza od ~1200mg. Jedna kapsula nije dovoljna.</span>
-      </div>
-    </div>
-
-    <div class="warn-card blue">
-      <div class="warn-title">🕐 Timing upozorenja</div>
-      <div class="warn-row">
-        <span class="warn-key">TruNiagen — prazan stomak</span>
-        <span class="warn-val">Ujutro pre doručka samo sa vodom. Ne sa ostalim suplementima.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Kreatin — posle treninga</span>
-        <span class="warn-val">Ne ujutro natašte. Uz ugljene hidrate i proteine za bolji uptake u mišiće.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Crestor — pred spavanje</span>
-        <span class="warn-val">Rosuvastatin ima poluživot 19h i deluje jednako jutro ili uveče, ali večernja rutina je praktična. Antrodia uzimati 1h pre Crestora.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">B Kompleks — jutro</span>
-        <span class="warn-val">Daje energiju — ne uzimati uveče jer može poremetiti san.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">5-HTP — večera</span>
-        <span class="warn-val">Podstiče serotonin i melatonin — uzimati uveče za bolji san i oporavak.</span>
-      </div>
-    </div>
-
-    <div class="warn-card green">
-      <div class="warn-title">💊 Crestor — specifična upozorenja</div>
-      <div class="warn-row">
-        <span class="warn-key">CoQ10 — svaki dan, uz obrok ⚠️</span>
-        <span class="warn-val">Rosuvastatini blokiraju CoQ10. Trenutni Anafarm CoQ10 je Ubiquinone forma — preporučuje se zamena sa Ubiquinol formom (Solgar/Kaneka) koja je direktno aktivna i 3x bolje se apsorbuje, posebno važno uz Crestor i sa godinama.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Grejpfrut — OK</span>
-        <span class="warn-val">Za razliku od lovastatin/simvastatin, rosuvastatin nema interakciju sa grejpfrutom.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Omega-3 — sinergija</span>
-        <span class="warn-val">Omega-3 dodatno snižava trigliceride uz statin terapiju. Pozitivna kombinacija.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Kreatin → kreatinin</span>
-        <span class="warn-val">Kreatin može lažno povisiti kreatinin na analizi — uvek reći lekaru da uzimate kreatin.</span>
-      </div>
-    </div>
-
-    <div class="warn-card gray">
-      <div class="warn-title">🩺 Prioritetne analize koje nedostaju</div>
-      <div class="warn-row">
-        <span class="warn-key">25-OH Vitamin D</span>
-        <span class="warn-val">Neophodno pre povećanja D3 doze. Cilj nivo: 60–80 ng/mL.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Lp(a) — jednom u životu</span>
-        <span class="warn-val">Genetski kardiovaskularni faktor rizika. Nije urađen. Prioritet #1.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">hsCRP + Homocistein</span>
-        <span class="warn-val">Nisu urađeni. Važni uz granični LDL i statin terapiju.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">ApoB</span>
-        <span class="warn-val">Precizniji od LDL za procenu kardiovaskularnog rizika uz Crestor.</span>
-      </div>
-    </div>
-
-    <div class="warn-card gray">
-      <div class="warn-title">🍄 Taiwan Fungus 牛樟芝 — napomene</div>
-      <div class="warn-row">
-        <span class="warn-key">Uzimati 1h pre spavanja</span>
-        <span class="warn-val">Za poboljšanje sna i smanjenje stresa uzimati sat vremena pre spavanja. Odvojiti 1–2h od Crestora i Magnezijuma.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Razmak od lekova</span>
-        <span class="warn-val">Uzimati 1–2h odvojeno od svih lekova da se izbegne uticaj na apsorpciju. Redosled uveče: Antrodia → sat pauze → Mg → Crestor.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Jetra — pratiti</span>
-        <span class="warn-val">I Antrodia i Crestor se metabolišu u jetri. Pratiti ALT/AST na godišnjim analizama. Reći lekaru da uzimate Antrodia.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Holesterol — sinergija</span>
-        <span class="warn-val">Antrodia može dodatno sniziti holesterol uz Crestor. Pratiti lipidni status na sledećim analizama.</span>
-      </div>
-      <div class="warn-row">
-        <span class="warn-key">Početi sa manjom dozom</span>
-        <span class="warn-val">Prve 1–2 nedelje uzimati polovinu preporučene doze da se proceni reakcija organizma.</span>
-      </div>
-    </div>
-
-    <div class="warn-footer">
-      ⚕️ Informativno. Konsultujte lekara pre promene terapije ili suplemenata.
+ 
+    <div class="lab-section">
+      <div class="lab-title">📊 Najnoviji nalazi — 18.05.2026</div>
+      <div class="lab-row"><div><div class="lab-name">Vitamin 25(OH) D total</div><div class="lab-date">cilj: 100+ nmol/L</div></div><div class="lab-val warn">80</div><div class="lab-ref">nmol/L<br>&gt; 75</div></div>
+      <div class="lab-row"><div><div class="lab-name">Folna kiselina (serum)</div><div class="lab-date">paradoks: ok u krvi, MTHFR blok</div></div><div class="lab-val ok">24.4</div><div class="lab-ref">nmol/L<br>10–70</div></div>
+      <div class="lab-row"><div><div class="lab-name">Homocistein</div><div class="lab-date">⚠️ PRIORITET</div></div><div class="lab-val high">14.8</div><div class="lab-ref">µmol/L<br>&lt; 12</div></div>
+      <div class="lab-row"><div><div class="lab-name">Lp(a)</div><div class="lab-date">genetski — ne menja se</div></div><div class="lab-val high">102</div><div class="lab-ref">nmol/L<br>0–75</div></div>
+      <div class="lab-row"><div><div class="lab-name">CRP</div><div class="lab-date">pratiti</div></div><div class="lab-val warn">5.5</div><div class="lab-ref">mg/L<br>&lt; 5.0</div></div>
+      <div class="lab-row"><div><div class="lab-name">Zink (⏸️ pauza sup.)</div><div class="lab-date">pre nastavka kontrola</div></div><div class="lab-val warn">19.5</div><div class="lab-ref">µmol/L<br>9.2–18.4</div></div>
+      <div class="lab-row"><div><div class="lab-name">PSA</div><div class="lab-date">dec: 1.59 → maj: 2.10 ⚠️</div></div><div class="lab-val warn">2.10</div><div class="lab-ref">ng/mL<br>&lt; 4.00</div></div>
+      <div class="lab-row"><div><div class="lab-name">Free PSA / PSA</div><div class="lab-date">povoljan ✓</div></div><div class="lab-val ok">0.30</div><div class="lab-ref">&gt; 0.25</div></div>
+      <div class="lab-row"><div><div class="lab-name">Vitamin B12</div><div class="lab-date">donja trećina</div></div><div class="lab-val warn">296</div><div class="lab-ref">pg/mL<br>197–771</div></div>
+      <div class="lab-row"><div><div class="lab-name">Holesterol</div><div class="lab-date">granično</div></div><div class="lab-val warn">5.34</div><div class="lab-ref">mmol/L<br>&lt; 5.17</div></div>
+      <div class="lab-row"><div><div class="lab-name">HDL holesterol</div><div class="lab-date">odlično ✓</div></div><div class="lab-val ok">2.22</div><div class="lab-ref">&gt; 1.45</div></div>
+      <div class="lab-row"><div><div class="lab-name">ApoB</div><div class="lab-date">uredan</div></div><div class="lab-val ok">1.02</div><div class="lab-ref">g/L<br>0.66–1.44</div></div>
+      <div class="lab-row"><div><div class="lab-name">Magnezijum</div><div class="lab-date">suplem. radi</div></div><div class="lab-val ok">0.91</div><div class="lab-ref">mmol/L<br>0.66–1.07</div></div>
+      <div class="lab-row"><div><div class="lab-name">SHBG</div><div class="lab-date">uredan</div></div><div class="lab-val ok">61.0</div><div class="lab-ref">nmol/L<br>20.6–76.7</div></div>
+      <div class="lab-row"><div><div class="lab-name">Kortizol (8h)</div><div class="lab-date">bez hr. stresa</div></div><div class="lab-val ok">382</div><div class="lab-ref">nmol/L<br>133–537</div></div>
+      <div class="lab-row"><div><div class="lab-name">Feritin</div><div class="lab-date">uredan</div></div><div class="lab-val ok">196</div><div class="lab-ref">ng/mL<br>30–400</div></div>
     </div>
   </div>
-</div>
-
+ 
+  <!-- WARNINGS -->
+  <div class="panel" id="panel-warnings">
+ 
+    <div class="warn-card red">
+      <div class="warn-title">🚫 Razmaci između suplemenata</div>
+      <div class="warn-row"><span class="warn-key">TruNiagen + Vitamin C</span><span class="warn-val">Min 4–6h razmaka. Vaš raspored (TruNiagen ujutro, C uz ručak) je optimalan.</span></div>
+      <div class="warn-row"><span class="warn-key">Crestor + Crveni kvas</span><span class="warn-val">Nikad zajedno — prirodni statin.</span></div>
+      <div class="warn-row"><span class="warn-key">Mg + Crestor</span><span class="warn-val">Min 1–2h razmaka. Mg sada uzimate tokom dana što rešava problem.</span></div>
+      <div class="warn-row"><span class="warn-key">Zink + Selen</span><span class="warn-val">Min 3–4h razmaka. Zink je trenutno PAUZIRAN.</span></div>
+      <div class="warn-row"><span class="warn-key">Kalcijum + D3</span><span class="warn-val">Ne primenjuje se za vas (ne uzimate Ca).</span></div>
+      <div class="warn-row"><span class="warn-key">Gvožđe + ostali min.</span><span class="warn-val">Ne primenjuje se (feritin uredan, ne uzimate Fe).</span></div>
+    </div>
+ 
+    <div class="warn-card orange">
+      <div class="warn-title">⚠️ MTHFR AG — homocistein 14.8 plan</div>
+      <div class="warn-row"><span class="warn-key">Genetski problem</span><span class="warn-val">Vaša C677T mutacija (AG) smanjuje konverziju običnog folata u aktivni MTHF. Zbog toga je homocistein povišen iako je serumska folna kiselina uredna.</span></div>
+      <div class="warn-row"><span class="warn-key">Faza 1 (sada — 2 ned.)</span><span class="warn-val">B12 Methylcobalamin + B6 P-5-P + B2 svaki dan uz doručak. Pure Encapsulations brendovi koje već imate.</span></div>
+      <div class="warn-row"><span class="warn-key">Faza 2 (za 2 nedelje)</span><span class="warn-val">Dodati Folate 400 Metafolin uz već postojeća B12/B6/B2. Početi sa pola kapsule prvih nedelju dana radi prilagođavanja.</span></div>
+      <div class="warn-row"><span class="warn-key">Cilj za 3 meseca</span><span class="warn-val">Homocistein &lt; 10 µmol/L. Kontrola krvi 3 meseca nakon stabilnog uzimanja sva 4 B vitamina.</span></div>
+    </div>
+ 
+    <div class="warn-card yellow">
+      <div class="warn-title">⚡ Obavezne kombinacije</div>
+      <div class="warn-row"><span class="warn-key">D3 → uvek sa K2</span><span class="warn-val">NOW Mega D3+K2 koji uzimate je odličan — kombinirano u jednoj kapsuli. Bez K2, D3 deponuje Ca u arterijama.</span></div>
+      <div class="warn-row"><span class="warn-key">CoQ10 → masni obrok</span><span class="warn-val">Liposolubilan. Bez masti apsorpcija je slabija. Anafarm Ubiquinone — razmotriti zamenu sa Biogena SPORTS Active CoQ10 200 (Ubiquinol forma).</span></div>
+      <div class="warn-row"><span class="warn-key">Omega-3 → uz obrok</span><span class="warn-val">Norsan Vegan Algenöl: 4 kapsule = 1700mg. Bez ribljeg podrigivanja.</span></div>
+      <div class="warn-row"><span class="warn-key">Vitamin E → masni obrok</span><span class="warn-val">Solgar Mixed Tocopherols 200 IU. Liposolubilan.</span></div>
+      <div class="warn-row"><span class="warn-key">B vitamini → svi zajedno</span><span class="warn-val">B12, B6, B2 (i kasnije Folate) deluju sinergijski. Uvek u istom obroku ujutro.</span></div>
+    </div>
+ 
+    <div class="warn-card blue">
+      <div class="warn-title">🕐 Dnevni redosled — sve interakcije</div>
+      <div class="warn-row"><span class="warn-key">🌅 Jutro natašte</span><span class="warn-val">TruNiagen 300mg — voda, 30 min pre doručka. SAMO ovo.</span></div>
+      <div class="warn-row"><span class="warn-key">🍳 Doručak</span><span class="warn-val">Pure Encapsulations B12 + B6 + B2 (Folate kreće za 2 ned.). Aktivne forme — daju energiju.</span></div>
+      <div class="warn-row"><span class="warn-key">🍽️ Glavni obrok</span><span class="warn-val">CoQ10, Omega-3, D3+K2 (pon/sre/pet), Vitamin E (pon/sre/pet), Vitamin C (uto/sub), Selen (čet/ned). Sve uz masni obrok.</span></div>
+      <div class="warn-row"><span class="warn-key">🏃 Posle treninga</span><span class="warn-val">Kreatin 5g uz obrok — ne ujutro natašte. Sa ugljenim hidratima za bolji uptake.</span></div>
+      <div class="warn-row"><span class="warn-key">🌞 Popodne / užina</span><span class="warn-val">Magnezijum Citrate 300mg uz manji obrok — eliminiše noćno mokrenje.</span></div>
+      <div class="warn-row"><span class="warn-key">🌙 Veče / pred spavanje</span><span class="warn-val">5-HTP 100mg (pon/sre/pet) na večeri → Antrodia 1h pre spavanja → Crestor 5mg pred spavanje.</span></div>
+    </div>
+ 
+    <div class="warn-card green">
+      <div class="warn-title">💊 Crestor — specifično</div>
+      <div class="warn-row"><span class="warn-key">CoQ10 obavezan</span><span class="warn-val">Crestor blokira CoQ10. Razmotriti zamenu sa Ubiquinol formom (Biogena u Beču).</span></div>
+      <div class="warn-row"><span class="warn-key">Omega-3 sinergija</span><span class="warn-val">Pojačava dejstvo na trigliceride.</span></div>
+      <div class="warn-row"><span class="warn-key">Grejpfrut OK</span><span class="warn-val">Rosuvastatin nema interakciju.</span></div>
+      <div class="warn-row"><span class="warn-key">Kreatin → kreatinin</span><span class="warn-val">Lažno povišenje na analizi. Reći lekaru.</span></div>
+    </div>
+ 
+    <div class="warn-card purple">
+      <div class="warn-title">🍄 Taiwan Fungus 牛樟芝</div>
+      <div class="warn-row"><span class="warn-key">1h pre spavanja</span><span class="warn-val">Odvojiti 1–2h od Crestora.</span></div>
+      <div class="warn-row"><span class="warn-key">Pratiti jetru</span><span class="warn-val">I Antrodia i Crestor — kontrola ALT/AST godišnje.</span></div>
+      <div class="warn-row"><span class="warn-key">Početak postepeno</span><span class="warn-val">Pola doze prvih 1–2 nedelje.</span></div>
+    </div>
+ 
+    <div class="warn-card gray">
+      <div class="warn-title">🩺 Predstojeće analize i kontrole</div>
+      <div class="warn-row"><span class="warn-key">Homocistein</span><span class="warn-val">Za 3 meseca — proveriti efekat B vitamina.</span></div>
+      <div class="warn-row"><span class="warn-key">Vitamin D</span><span class="warn-val">Za 3 meseca — povećati dozu na 3000–4000 IU. Cilj 100+ nmol/L.</span></div>
+      <div class="warn-row"><span class="warn-key">PSA + urolog</span><span class="warn-val">Za 6–8 nedelja, 48h bez sporta/seksa pre uzimanja.</span></div>
+      <div class="warn-row"><span class="warn-key">Zink</span><span class="warn-val">Za 3 nedelje — pre nastavka suplementacije.</span></div>
+      <div class="warn-row"><span class="warn-key">CRP</span><span class="warn-val">Za 1 mesec — da li je trajna upala.</span></div>
+      <div class="warn-row"><span class="warn-key">Lp(a)</span><span class="warn-val">Genetski — meriti samo jednom u životu.</span></div>
+    </div>
+ 
+    <div class="warn-footer">⚕️ Informativno. Konsultujte lekara pre promene terapije.</div>
+  </div>
+ 
+  <!-- SUGGESTED -->
+  <div class="panel" id="panel-suggested">
+    <div class="sec-hdr">Preporučeni dodatni suplementi</div>
+ 
+    <div class="sug-card must">
+      <div class="sug-head"><div class="sug-name">Berberin 500mg</div><span class="sug-tag must">OBAVEZNO</span></div>
+      <div class="sug-why">Vaš LDL je 2.91 i holesterol granično 5.34 uprkos Crestoru. Berberin može dodatno sniziti LDL za 20–25%, snižava glukozu i poboljšava insulinsku osetljivost.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 500mg 2x dnevno, uz obrok</div>
+        <div><strong>Brend:</strong> Thorne Berberine ili Biogena Berberin</div>
+        <div><strong>Cena:</strong> ~€30–40/mes</div>
+        <div><strong>Kupi u Beču:</strong> Biogena Store, Seilergasse</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card must">
+      <div class="sug-head"><div class="sug-name">Quercetin 500mg + Bromelain</div><span class="sug-tag must">OBAVEZNO</span></div>
+      <div class="sug-why">Lp(a) 102 je nepromenjiv genetski, ali Quercetin može sniziti njegovo negativno dejstvo na zidove arterija. Takođe snižava CRP (vaš je 5.5) i deluje antiinflamatorno.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 500mg dnevno uz obrok</div>
+        <div><strong>Brend:</strong> Thorne Quercetin Phytosome, Solgar Quercetin Complex</div>
+        <div><strong>Sinergija:</strong> uz Omega-3 i Vitamin C</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card recommend">
+      <div class="sug-head"><div class="sug-name">Nattokinase 100mg</div><span class="sug-tag recommend">POŽELJNO</span></div>
+      <div class="sug-why">Uz povišen Lp(a) i CRP — Nattokinase pomaže u sprečavanju formiranja krvnih ugrušaka, snižava fibrinogen, podržava cirkulaciju.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 100–200mg uveče, daleko od obroka</div>
+        <div><strong>Brend:</strong> Doctor's Best Nattokinase, NOW Nattokinase</div>
+        <div><strong>Pažnja:</strong> Ne uz antikoagulante. Crestor nije problem.</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card recommend">
+      <div class="sug-head"><div class="sug-name">Likopen 15mg</div><span class="sug-tag recommend">POŽELJNO</span></div>
+      <div class="sug-why">PSA raste (1.59 → 2.10 za 5 meseci). Likopen je naučno potvrđen kao protektivan za prostatu, snižava rizik od BPH i karcinoma prostate.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 15mg dnevno uz masni obrok</div>
+        <div><strong>Brend:</strong> Solgar Lycopene, NOW Lycopene</div>
+        <div><strong>Alternativa:</strong> 2 kuvana paradajza dnevno</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card recommend">
+      <div class="sug-head"><div class="sug-name">Saw Palmetto 320mg</div><span class="sug-tag recommend">POŽELJNO</span></div>
+      <div class="sug-why">Uz PSA porast i noćno mokrenje — Saw Palmetto je prvi izbor za podršku prostate. Smanjuje simptome BPH. Diskutovati sa urologom pre uvođenja.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 320mg dnevno uz obrok</div>
+        <div><strong>Brend:</strong> Solgar Saw Palmetto, Thorne Saw Palmetto</div>
+        <div><strong>Sinergija:</strong> uz Likopen i Zink (kad se Zink vrati)</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card recommend">
+      <div class="sug-head"><div class="sug-name">Curcumin (kurkuma) sa Piperinom</div><span class="sug-tag recommend">POŽELJNO</span></div>
+      <div class="sug-why">CRP 5.5 — blago povišen marker upale. Curcumin je najpotentniji prirodni antiinflamatorni agent, štiti jetru, mozak, zglobove.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 500mg dnevno uz masni obrok</div>
+        <div><strong>Brend:</strong> Thorne Curcumin Phytosome ili Solgar Full Spectrum Curcumin</div>
+        <div><strong>Pažnja:</strong> Ne uz antikoagulante.</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card optional">
+      <div class="sug-head"><div class="sug-name">Ashwagandha (KSM-66) 600mg</div><span class="sug-tag optional">MOŽE</span></div>
+      <div class="sug-why">Adaptogen za upravljanje stresom i poboljšanje sna. Kortizol vam je uredan (382), ali ako imate stresne periode ili noćno buđenje — Ashwagandha pomaže.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 600mg uveče</div>
+        <div><strong>Brend:</strong> Jarrow KSM-66, Thorne Ashwagandha</div>
+        <div><strong>Forma:</strong> KSM-66 ili Sensoril (klinički ispitani ekstrakti)</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card optional">
+      <div class="sug-head"><div class="sug-name">L-Citrulin / L-Arginin</div><span class="sug-tag optional">MOŽE</span></div>
+      <div class="sug-why">Podrška kardiovaskularnom sistemu i sportskoj performansi. Povećava nitric oxide, poboljšava cirkulaciju i izdržljivost. Za nekoga ko trenira tenis svaki dan — dobar dodatak.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 3–6g L-Citrulina pre treninga</div>
+        <div><strong>Brend:</strong> NOW L-Citrulline, Thorne Amino Complex</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card optional">
+      <div class="sug-head"><div class="sug-name">Resveratrol 250mg</div><span class="sug-tag optional">MOŽE</span></div>
+      <div class="sug-why">Sinergija sa TruNiagen (NR) za longevitet. Aktivira SIRT1 gene, kardioprotektivan, antiinflamatorni efekat. Premijum dodatak za zdravo starenje.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 250mg uz masni obrok</div>
+        <div><strong>Brend:</strong> Thorne ResveraCel, Life Extension Optimized Resveratrol</div>
+      </div>
+    </div>
+ 
+    <div class="sug-card optional">
+      <div class="sug-head"><div class="sug-name">Probiotik visokog kvaliteta</div><span class="sug-tag optional">MOŽE</span></div>
+      <div class="sug-why">Crevna mikroflora utiče na sve — apsorpciju nutrijenata, imunitet, upalu, raspoloženje. Posebno korisno uz dugogodišnju statin terapiju.</div>
+      <div class="sug-details">
+        <div><strong>Doza:</strong> 1 kapsula ujutro pre doručka</div>
+        <div><strong>Brend:</strong> Thorne FloraSport 20B, Biogena OmniBiotic</div>
+        <div><strong>Forma:</strong> minimum 10 sojeva, 20+ milijardi CFU</div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+</div><!-- end main -->
+ 
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
-
-// ─── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+ 
 const firebaseConfig = {
   apiKey: "AIzaSyC2A62LsbPAGg23_WMU7-ExkiF23wyKpRk",
   authDomain: "sasin-tracker.firebaseapp.com",
@@ -784,108 +468,132 @@ const firebaseConfig = {
   appId: "1:529987820897:web:71a99e4201ffd892c77920",
   measurementId: "G-X4Z6523FDF"
 };
-
+ 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-// ─── SCHEDULE ────────────────────────────────────────────────────────────────
+ 
+// ─── SCHEDULE (v3.0 — ažurirani suplementi sa brand/method/isPaused/isSoon) ──
 const S = {
-  0: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'selen', name:'Selen 200mcg (Terra Nova)', dose:'200mcg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:true, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  0: [ // Nedelja — PAUZA B vitamini
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'d3k2', name:'Vitamin D3 + K2 MK-7', dose:'1 kapsula = 5000 IU D3 + 180mcg K2', brand:'NOW Mega D3 & MK-7', method:'Uz masni obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'selen', name:'Selen 200mcg', dose:'200mcg', brand:'Terra Nova Selenomethionin', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'zink', name:'Zink ⏸️', dose:'PAUZIRANO — 3 ned.', brand:'povišen u nalazima', method:'Pre nastavka — kontrola', cat:'meal', isPaused:true},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  1: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
-    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  1: [ // Ponedeljak
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'b12', name:'Vitamin B12', dose:'1 kapsula', brand:'Pure Encapsulations — Methylcobalamin', method:'Uz doručak', cat:'breakfast'},
+    {id:'b6', name:'Vitamin B6 (P-5-P)', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'b2', name:'Vitamin B2', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'folate', name:'Folate 400', dose:'pola kapsule', brand:'Pure Encapsulations — Metafolin', method:'Uz doručak — START ZA 2 NED.', cat:'breakfast', isSoon:true},
+    {id:'d3k2', name:'Vitamin D3 + K2 MK-7', dose:'1 kapsula = 5000 IU D3 + 180mcg K2', brand:'NOW Mega D3 & MK-7', method:'Uz masni obrok', cat:'meal'},
+    {id:'vite', name:'Vitamin E', dose:'200 IU', brand:'Solgar D-Alpha + Mixed Tocopherols', method:'Uz masni obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'5htp', name:'5-HTP', dose:'100mg', brand:'', method:'Uz večeru', cat:'evening'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  2: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
-    {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  2: [ // Utorak
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'b12', name:'Vitamin B12', dose:'1 kapsula', brand:'Pure Encapsulations — Methylcobalamin', method:'Uz doručak', cat:'breakfast'},
+    {id:'b6', name:'Vitamin B6 (P-5-P)', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'b2', name:'Vitamin B2', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'folate', name:'Folate 400', dose:'pola kapsule', brand:'Pure Encapsulations — Metafolin', method:'Uz doručak — START ZA 2 NED.', cat:'breakfast', isSoon:true},
+    {id:'vitc', name:'Vitamin C', dose:'1000mg', brand:'', method:'Uz obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  3: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
-    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  3: [ // Sreda
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'b12', name:'Vitamin B12', dose:'1 kapsula', brand:'Pure Encapsulations — Methylcobalamin', method:'Uz doručak', cat:'breakfast'},
+    {id:'b6', name:'Vitamin B6 (P-5-P)', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'b2', name:'Vitamin B2', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'folate', name:'Folate 400', dose:'pola kapsule', brand:'Pure Encapsulations — Metafolin', method:'Uz doručak — START ZA 2 NED.', cat:'breakfast', isSoon:true},
+    {id:'d3k2', name:'Vitamin D3 + K2 MK-7', dose:'1 kapsula = 5000 IU D3 + 180mcg K2', brand:'NOW Mega D3 & MK-7', method:'Uz masni obrok', cat:'meal'},
+    {id:'vite', name:'Vitamin E', dose:'200 IU', brand:'Solgar Mixed Tocopherols', method:'Uz masni obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'5htp', name:'5-HTP', dose:'100mg', brand:'', method:'Uz večeru', cat:'evening'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  4: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'selen', name:'Selen 200mcg (Terra Nova)', dose:'200mcg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  4: [ // Četvrtak
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'b12', name:'Vitamin B12', dose:'1 kapsula', brand:'Pure Encapsulations — Methylcobalamin', method:'Uz doručak', cat:'breakfast'},
+    {id:'b6', name:'Vitamin B6 (P-5-P)', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'b2', name:'Vitamin B2', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'folate', name:'Folate 400', dose:'pola kapsule', brand:'Pure Encapsulations — Metafolin', method:'Uz doručak — START ZA 2 NED.', cat:'breakfast', isSoon:true},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'selen', name:'Selen 200mcg', dose:'200mcg', brand:'Terra Nova Selenomethionin', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  5: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'d3', name:'Vitamin D3', dose:'2000–5000 IU', cat:'meal', isNew:false, isRx:false},
-    {id:'k2', name:'K2 MK-7', dose:'100–200mcg — uz D3', cat:'meal', isNew:false, isRx:false},
-    {id:'vite', name:'Vitamin E 200IU (Solgar Mixed)', dose:'134mg/200IU D-Alpha + Mixed Tocopherols', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'5htp', name:'5-HTP', dose:'100mg', cat:'evening', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  5: [ // Petak
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'b12', name:'Vitamin B12', dose:'1 kapsula', brand:'Pure Encapsulations — Methylcobalamin', method:'Uz doručak', cat:'breakfast'},
+    {id:'b6', name:'Vitamin B6 (P-5-P)', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'b2', name:'Vitamin B2', dose:'1 kapsula', brand:'Pure Encapsulations', method:'Uz doručak', cat:'breakfast'},
+    {id:'folate', name:'Folate 400', dose:'pola kapsule', brand:'Pure Encapsulations — Metafolin', method:'Uz doručak — START ZA 2 NED.', cat:'breakfast', isSoon:true},
+    {id:'d3k2', name:'Vitamin D3 + K2 MK-7', dose:'1 kapsula = 5000 IU D3 + 180mcg K2', brand:'NOW Mega D3 & MK-7', method:'Uz masni obrok', cat:'meal'},
+    {id:'vite', name:'Vitamin E', dose:'200 IU', brand:'Solgar Mixed Tocopherols', method:'Uz masni obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'5htp', name:'5-HTP', dose:'100mg', brand:'', method:'Uz večeru', cat:'evening'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
-  6: [
-    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg — prazan stomak', cat:'morning', isNew:false, isRx:false},
-    {id:'bkomp', name:'B Kompleks', dose:'1 kapsula — uz doručak', cat:'morning', isNew:false, isRx:false},
-    {id:'vitc', name:'Vitamin C', dose:'1000mg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'coq10', name:'CoQ10 200mg (Anafarm)*', dose:'200mg — uz masni obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'omega3', name:'Omega-3 DS (Solgar)', dose:'2 kapsule = ~1200mg EPA+DHA', cat:'meal', isNew:false, isRx:false},
-    {id:'zink', name:'Zink', dose:'15–25mg — uz obrok', cat:'meal', isNew:false, isRx:false},
-    {id:'kreatin', name:'Kreatin', dose:'5g — posle treninga', cat:'meal', isNew:false, isRx:false},
-    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo — 1h pre spavanja', cat:'evening', isNew:false, isRx:false},
-    {id:'mg', name:'Mg Citrate (Solgar)', dose:'300–400mg — 1–2h pre Crestora', cat:'evening', isNew:false, isRx:false},
-    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', cat:'evening', isNew:false, isRx:true},
+  6: [ // Subota — PAUZA B vitamini
+    {id:'truniagen', name:'TruNiagen (NR)', dose:'300mg', brand:'TruNiagen Original', method:'Sa vodom, prazan stomak', cat:'morning'},
+    {id:'vitc', name:'Vitamin C', dose:'1000mg', brand:'', method:'Uz obrok', cat:'meal'},
+    {id:'d3k2', name:'Vitamin D3 + K2 MK-7', dose:'1 kapsula = 5000 IU D3 + 180mcg K2', brand:'NOW Mega D3 & MK-7', method:'Uz masni obrok', cat:'meal'},
+    {id:'coq10', name:'CoQ10 200mg', dose:'200mg', brand:'Anafarm Ubiquinone *', method:'Uz masni obrok', cat:'meal'},
+    {id:'omega3', name:'Omega-3 Vegan', dose:'4 kapsule = 1700mg EPA+DHA', brand:'Norsan Algenöl', method:'Uz obrok', cat:'meal'},
+    {id:'kreatin', name:'Kreatin', dose:'5g', brand:'Monohydrat', method:'Posle treninga uz obrok', cat:'meal'},
+    {id:'zink', name:'Zink ⏸️', dose:'PAUZIRANO — 3 ned.', brand:'povišen u nalazima', method:'Pre nastavka — kontrola', cat:'meal', isPaused:true},
+    {id:'mg', name:'Magnezijum Citrate', dose:'300mg', brand:'Solgar Mg Citrate', method:'Tokom dana uz manji obrok', cat:'afternoon'},
+    {id:'antrodia', name:'Taiwan Fungus 牛樟芝', dose:'per uputstvo', brand:'', method:'1h pre spavanja', cat:'evening'},
+    {id:'crestor', name:'Crestor (Rosuvastatin)', dose:'5mg', brand:'Rx', method:'Pred spavanje', cat:'evening', isRx:true},
   ],
 };
-
+ 
 const DAYS_FULL = ['Nedelja','Ponedeljak','Utorak','Sreda','Četvrtak','Petak','Subota'];
 const MONTHS = ['jan','feb','mar','apr','maj','jun','jul','avg','sep','okt','nov','dec'];
-
+ 
+const SECTION_INFO = {
+  morning:   { icon:'🌅', label:'JUTRO — NATAŠTE' },
+  breakfast: { icon:'🍳', label:'UZ DORUČAK' },
+  meal:      { icon:'🍽️', label:'UZ GLAVNI OBROK' },
+  afternoon: { icon:'🌞', label:'TOKOM DANA / UŽINA' },
+  evening:   { icon:'🌙', label:'VEČERA & PRED SPAVANJE' },
+};
+ 
 function dkey(d) {
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
-
-// ─── IN-MEMORY CACHE (so UI stays fast) ──────────────────────────────────────
+ 
+// ─── IN-MEMORY CACHE (Firebase sync) ─────────────────────────────────────────
 let cache = {};
-
+ 
 // ─── SYNC UI ─────────────────────────────────────────────────────────────────
 let syncTimer = null;
 function showSync(msg, type='syncing') {
@@ -902,7 +610,7 @@ function showSync(msg, type='syncing') {
     }, 2000);
   }
 }
-
+ 
 // ─── FIRESTORE LOAD/SAVE ─────────────────────────────────────────────────────
 async function loadFromFirestore() {
   try {
@@ -917,7 +625,7 @@ async function loadFromFirestore() {
     showSync('⚠ Offline mod', 'error');
   }
 }
-
+ 
 async function saveToFirestore(key, checked) {
   try {
     showSync('Čuvanje...', 'syncing');
@@ -928,159 +636,141 @@ async function saveToFirestore(key, checked) {
     showSync('⚠ Greška pri čuvanju', 'error');
   }
 }
-
-// ─── DATA HELPERS ─────────────────────────────────────────────────────────────
+ 
 function getChecked(key) { return cache[key] || []; }
-
 function isToday(d) { const t=new Date(); t.setHours(0,0,0,0); return d.getTime()===t.getTime(); }
 function isFuture(d) { const t=new Date(); t.setHours(0,0,0,0); return d>t; }
-function fmtDate(d) {
-  return DAYS_FULL[d.getDay()] + ', ' + d.getDate() + '. ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + '.';
-}
-
+function fmtDate(d) { return DAYS_FULL[d.getDay()]+', '+d.getDate()+'. '+MONTHS[d.getMonth()]+' '+d.getFullYear()+'.'; }
+ 
 function streak() {
-  let s = 0, d = new Date(); d.setHours(0,0,0,0);
+  let s=0, d=new Date(); d.setHours(0,0,0,0);
   while(true) {
-    const k = dkey(d);
-    const sups = S[d.getDay()]||[];
-    const chk = getChecked(k);
-    if(sups.length > 0 && chk.length >= sups.length) { s++; d = new Date(d-86400000); }
-    else break;
+    const k=dkey(d);
+    const sups=(S[d.getDay()]||[]).filter(x=>!x.isPaused && !x.isSoon);
+    const chk=getChecked(k);
+    if(sups.length>0 && chk.length>=sups.length){ s++; d=new Date(d-86400000); } else break;
   }
   return s;
 }
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
+ 
 let vd = new Date(); vd.setHours(0,0,0,0);
-
+ 
 function renderDay() {
-  const key = dkey(vd);
-  const dayIdx = vd.getDay();
-  const sups = S[dayIdx]||[];
-  const checked = getChecked(key);
-
-  document.getElementById('headerDate').textContent = fmtDate(new Date());
-  document.getElementById('navLabel').textContent = isToday(vd) ? '— DANAS —' : fmtDate(vd);
-
-  const done = sups.filter(s=>checked.includes(s.id)).length;
-  const total = sups.length;
-
-  document.getElementById('sDone').textContent = done;
-  document.getElementById('sLeft').textContent = total - done;
-  document.getElementById('sTotal').textContent = total;
-  document.getElementById('sStreak').textContent = streak();
-  document.getElementById('progText').textContent = done + ' / ' + total;
-  document.getElementById('progFill').style.width = (total ? Math.round(done/total*100) : 0) + '%';
-  document.getElementById('allDone').style.display = (done===total && total>0) ? 'block' : 'none';
-
-  const wrap = document.getElementById('listWrap');
-  wrap.innerHTML = '';
-
-  const sections = [
-    { key:'morning', icon:'🌅', label:'JUTRO' },
-    { key:'meal',    icon:'🍽️', label:'UZ OBROK' },
-    { key:'evening', icon:'🌙', label:'VEČERA & PRED SPAVANJE' },
-  ];
-
-  sections.forEach(sec => {
-    const items = sups.filter(s=>s.cat===sec.key);
+  const key=dkey(vd);
+  const dayIdx=vd.getDay();
+  const sups=S[dayIdx]||[];
+  const checked=getChecked(key);
+  const activeSups=sups.filter(s=>!s.isPaused && !s.isSoon);
+ 
+  document.getElementById('headerDate').textContent=fmtDate(new Date());
+  document.getElementById('navLabel').textContent=isToday(vd)?'— DANAS —':fmtDate(vd);
+ 
+  const done=activeSups.filter(s=>checked.includes(s.id)).length;
+  const total=activeSups.length;
+  document.getElementById('sDone').textContent=done;
+  document.getElementById('sLeft').textContent=total-done;
+  document.getElementById('sTotal').textContent=total;
+  document.getElementById('sStreak').textContent=streak();
+  document.getElementById('progText').textContent=done+' / '+total;
+  document.getElementById('progFill').style.width=(total?Math.round(done/total*100):0)+'%';
+  document.getElementById('allDone').style.display=(done===total&&total>0)?'block':'none';
+ 
+  const wrap=document.getElementById('listWrap');
+  wrap.innerHTML='';
+ 
+  ['morning','breakfast','meal','afternoon','evening'].forEach(cat=>{
+    const items=sups.filter(s=>s.cat===cat);
     if(!items.length) return;
-
-    const hdr = document.createElement('div');
-    hdr.className = 'section-hdr';
-    hdr.textContent = sec.icon + ' ' + sec.label;
+    const info=SECTION_INFO[cat];
+    const hdr=document.createElement('div');
+    hdr.className='sec-hdr';
+    hdr.textContent=info.icon+' '+info.label;
     wrap.appendChild(hdr);
-
-    const list = document.createElement('div');
-    list.className = 'sup-list';
-
-    items.forEach(sup => {
-      const isDone = checked.includes(sup.id);
-      const div = document.createElement('div');
-      div.className = 'sup-item' + (isDone ? (sup.isRx ? ' is-done is-rx' : ' is-done') : '') + (sup.isRx ? ' is-rx' : '');
-
-      div.innerHTML = `
-        <div class="chk">${isDone ? '✓' : ''}</div>
+    const list=document.createElement('div');
+    list.className='sup-list';
+    items.forEach(sup=>{
+      const isDone=checked.includes(sup.id);
+      const div=document.createElement('div');
+      let cls='sup-item';
+      if(sup.isPaused) cls+=' is-paused';
+      else if(sup.isSoon) cls+=' is-future-start';
+      else if(isDone) cls+=(sup.isRx?' is-done is-rx':' is-done');
+      if(sup.isRx) cls+=' is-rx';
+      div.className=cls;
+      div.innerHTML=`
+        <div class="chk">${isDone&&!sup.isPaused&&!sup.isSoon?'✓':''}</div>
         <div class="sup-body">
           <div class="sup-name-row">
             <span class="sup-name">${sup.name}</span>
-            ${sup.isNew ? '<span class="badge badge-new">NOVO</span>' : ''}
-            ${sup.isRx ? '<span class="badge badge-rx">Rx</span>' : ''}
+            ${sup.isRx?'<span class="badge badge-rx">Rx</span>':''}
+            ${sup.isPaused?'<span class="badge badge-pause">PAUZA</span>':''}
+            ${sup.isSoon?'<span class="badge badge-soon">USKORO</span>':''}
           </div>
           <div class="sup-dose">${sup.dose}</div>
+          ${sup.brand?`<div class="sup-brand">${sup.brand}</div>`:''}
+          ${sup.method?`<div class="sup-method">→ ${sup.method}</div>`:''}
         </div>
-        <div class="sup-time">${isDone ? '✓' : sec.icon}</div>
+        <div class="sup-time">${isDone&&!sup.isPaused&&!sup.isSoon?'✓':info.icon}</div>
       `;
-
-      if(!isFuture(vd)) {
-        div.onclick = () => toggle(key, sup.id);
-      } else {
-        div.style.opacity = '0.4';
-        div.style.cursor = 'not-allowed';
+      if(!sup.isPaused && !sup.isSoon && !isFuture(vd)){
+        div.onclick=()=>toggle(key, sup.id);
       }
-
       list.appendChild(div);
     });
     wrap.appendChild(list);
   });
 }
-
+ 
 async function toggle(key, id) {
-  if(!cache[key]) cache[key] = [];
-  const i = cache[key].indexOf(id);
+  if(!cache[key]) cache[key]=[];
+  const i=cache[key].indexOf(id);
   if(i>=0) cache[key].splice(i,1); else cache[key].push(id);
-  renderDay(); // instant UI update from cache
-  await saveToFirestore(key, cache[key]); // then persist
+  renderDay();
+  await saveToFirestore(key, cache[key]);
 }
-
+ 
 window.resetDay = async function() {
   if(!confirm('Resetovati sve za ovaj dan?')) return;
-  const key = dkey(vd);
-  cache[key] = [];
+  const key=dkey(vd);
+  cache[key]=[];
   renderDay();
   await saveToFirestore(key, []);
 };
-
-window.shiftDay = function(n) { vd = new Date(vd.getTime()+n*86400000); renderDay(); };
-window.goToday = function() { vd = new Date(); vd.setHours(0,0,0,0); renderDay(); };
-
+ 
+window.shiftDay = function(n){ vd=new Date(vd.getTime()+n*86400000); renderDay(); };
+window.goToday = function(){ vd=new Date(); vd.setHours(0,0,0,0); renderDay(); };
+ 
 function renderHistory() {
-  const wrap = document.getElementById('histWrap');
-  wrap.innerHTML = '';
-  const keys = Object.keys(cache).sort().reverse();
-
-  if(!keys.length) {
-    wrap.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.<br>Počnite da čekirate!</div></div>';
+  const wrap=document.getElementById('histWrap');
+  wrap.innerHTML='';
+  const keys=Object.keys(cache).sort().reverse();
+  if(!keys.length){
+    wrap.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.<br>Počnite da čekirate!</div></div>';
     return;
   }
-
-  let any = false;
-  keys.forEach(key => {
-    const chk = cache[key]||[];
+  let any=false;
+  keys.forEach(key=>{
+    const chk=cache[key]||[];
     if(!chk.length) return;
-    const d = new Date(key+'T00:00:00');
-    const sups = S[d.getDay()]||[];
-    const done = sups.filter(s=>chk.includes(s.id));
+    const d=new Date(key+'T00:00:00');
+    const sups=(S[d.getDay()]||[]).filter(s=>!s.isPaused && !s.isSoon);
+    const done=sups.filter(s=>chk.includes(s.id));
     if(!done.length) return;
-    any = true;
-
-    const card = document.createElement('div');
-    card.className = 'hist-card';
-    card.innerHTML = `
+    any=true;
+    const card=document.createElement('div');
+    card.className='hist-card';
+    card.innerHTML=`
       <div class="hist-head">
         <span class="hist-date">${DAYS_FULL[d.getDay()]}, ${d.getDate()}. ${MONTHS[d.getMonth()]} ${d.getFullYear()}.</span>
         <span class="hist-score">${done.length}/${sups.length}</span>
       </div>
-      <div class="hist-pills">
-        ${done.map(s=>`<span class="hist-pill${s.isRx?' rx':''}">${s.name}</span>`).join('')}
-      </div>
+      <div class="hist-pills">${done.map(s=>`<span class="hist-pill${s.isRx?' rx':''}">${s.name}</span>`).join('')}</div>
     `;
     wrap.appendChild(card);
   });
-
-  if(!any) wrap.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.</div></div>';
+  if(!any) wrap.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Još nema istorije.</div></div>';
 }
-
+ 
 window.switchTab = function(tab, btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -1088,14 +778,13 @@ window.switchTab = function(tab, btn) {
   btn.classList.add('active');
   if(tab==='history') renderHistory();
 };
-
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+ 
 async function init() {
   await loadFromFirestore();
   document.getElementById('loadingOverlay').classList.add('hidden');
   renderDay();
 }
-
+ 
 init();
 </script>
 </body>
